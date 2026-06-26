@@ -41,4 +41,4 @@ my_robot = MecanumDrive(fl_motor, fr_motor, bl_motor, br_motor)
 
 brain = Brain()
 
-my_robot.drive(100, 50, 50)  # Drive forward at 100% speed
+my_robot.drive(50, 50, 50)  # Drive forward at 50% speed
