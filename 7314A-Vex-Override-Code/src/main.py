@@ -32,13 +32,36 @@ class MecanumDrive:
         self.bl_motor.spin(FORWARD, -(bl * scale), PERCENT)
         self.br_motor.spin(FORWARD, (br * scale), PERCENT)
 
-fl_motor = Motor(Ports.PORT20)
-fr_motor = Motor(Ports.PORT12)
-br_motor = Motor(Ports.PORT1)  
-bl_motor = Motor(Ports.PORT3)
+fl_motor = Motor(Ports.PORT1)
+fr_motor = Motor(Ports.PORT10)
+br_motor = Motor(Ports.PORT20)  
+bl_motor = Motor(Ports.PORT11)
 
 my_robot = MecanumDrive(fl_motor, fr_motor, bl_motor, br_motor)
 
 brain = Brain()
 
-my_robot.drive(50, 50, 50)  # Drive forward at 50% speed
+controller = Controller()
+
+def autonomous():
+    brain.screen.clear_screen()
+    brain.screen.print("autonomous code")
+    # place automonous code here
+
+def user_control():
+    brain.screen.clear_screen()
+    brain.screen.print("driver control")
+    # place driver control in this while loop
+    while True:
+        fwd = controller.axis3.position()
+        strafe = controller.axis4.position()
+        turn = controller.axis1.position()
+        my_robot.drive(fwd, strafe, turn)
+        
+        wait(1, MSEC)
+
+# create competition instance
+comp = Competition(user_control, autonomous)
+
+# actions to do when the program starts
+brain.screen.clear_screen()
