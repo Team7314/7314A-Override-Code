@@ -45,6 +45,7 @@ class Robot:
         self.drive_base = MecanumDrive(fl_motor, fr_motor, bl_motor, br_motor)
         self.pin_color_sensor.set_light_power(100, PERCENT)
         self.controller = Controller()
+<<<<<<< HEAD
         self.inertial_sensor = Inertial(Ports.PORT15)
     
     def autonomous(self):
@@ -59,6 +60,28 @@ class Robot:
         DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
         DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
         DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 67, INCHES)
+=======
+    
+    def update_display_color(self):
+        color = self.pin_color_sensor.color()
+        if color == Color.RED:
+            self.brain.screen.set_fill_color(Color.RED)
+            self.brain.screen.draw_rectangle(0, 0, 480, 240)
+        elif color == Color.YELLOW:
+            self.brain.screen.set_fill_color(Color.YELLOW)
+            self.brain.screen.draw_rectangle(0, 0, 480, 240)
+        elif color == Color.BLUE:
+            self.brain.screen.set_fill_color(Color.BLUE)
+            self.brain.screen.draw_rectangle(0, 0, 480, 240)
+        else:
+            self.brain.screen.set_fill_color(Color.BLACK)
+            self.brain.screen.draw_rectangle(0, 0, 480, 240)
+
+    def autonomous(self):
+        self.brain.screen.clear_screen()
+        self.brain.screen.print("autonomous code")
+        # place automonous code here
+>>>>>>> 8a42928 (Added color sensor)
     
     def user_control(self):
         self.brain.screen.clear_screen()
