@@ -50,8 +50,15 @@ class Robot:
     def autonomous(self):
         self.brain.screen.clear_screen()
         self.brain.screen.print("autonomous code")
-        # place automonous code here
 
+        # place automonous code here
+        Inertial(Ports.PORT2).calibrate()
+        wait(2, SECONDS)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 67, INCHES)
     
     def user_control(self):
         self.brain.screen.clear_screen()
