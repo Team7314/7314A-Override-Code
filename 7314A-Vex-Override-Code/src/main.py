@@ -14,54 +14,9 @@ from vex import Motor, FORWARD, PERCENT, Ports
 
 class MecanumDrive:
     def __init__(self, fl_motor, fr_motor, bl_motor, br_motor):
-        self.fl_motor : Motor = fl_motor
-        self.fr_motor : Motor = fr_motor
-        self.bl_motor : Motor = bl_motor
-        self.br_motor : Motor = br_motor
-        
-    def drive(self, fwd, strafe, turn):        
-        fl = fwd + strafe + turn
-        fr = fwd - strafe - turn
-        bl = fwd - strafe + turn
-        br = fwd + strafe - turn
-        
-        top_speed = max(abs(fl), abs(fr), abs(bl), abs(br), 100)
-        scale = 100.0 / top_speed
-        
-        self.fl_motor.spin(FORWARD, -(fl * scale), PERCENT)
-        self.fr_motor.spin(FORWARD, (fr * scale), PERCENT)
-        self.bl_motor.spin(FORWARD, -(bl * scale), PERCENT)
-        self.br_motor.spin(FORWARD, (br * scale), PERCENT)
-
-
-class Robot:
-    def __init__(self):
-        self.brain = Brain()
-        fl_motor = Motor(Ports.PORT1)
-        fr_motor = Motor(Ports.PORT10)
-        br_motor = Motor(Ports.PORT20)  
-        bl_motor = Motor(Ports.PORT11)
-        self.pin_color_sensor = Optical(Ports.PORT15)
-        self.drive_base = MecanumDrive(fl_motor, fr_motor, bl_motor, br_motor)
-        self.pin_color_sensor.set_light_power(100, PERCENT)
         self.controller = Controller()
-<<<<<<< HEAD
         self.inertial_sensor = Inertial(Ports.PORT15)
-    
-    def autonomous(self):
-        self.brain.screen.clear_screen()
-        self.brain.screen.print("autonomous code")
 
-        # place automonous code here
-        Inertial(Ports.PORT2).calibrate()
-        wait(2, SECONDS)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 67, INCHES)
-=======
-    
     def update_display_color(self):
         color = self.pin_color_sensor.color()
         if color == Color.RED:
@@ -80,8 +35,46 @@ class Robot:
     def autonomous(self):
         self.brain.screen.clear_screen()
         self.brain.screen.print("autonomous code")
+
         # place automonous code here
+        Inertial(Ports.PORT2).calibrate()
+        wait(2, SECONDS)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 67, INCHES)
+
+    def user_control(self):
+        self.brain.screen.clear_screen()
+        self.brain.screen.print("driver control")
+        # place driver control in this while loop
+
+        while True:
+            fwd = self.controller.axis3.position()
+            strafe = self.controller.axis4.position()
+            turn = self.controller.axis1.position()
+            self.drive_base.drive(fwd, strafe, turn)
+
+            self.update_display_color()
+            
+            wait(1, MSEC)
+
+        # place automonous code here
+<<<<<<< HEAD
 >>>>>>> 8a42928 (Added color sensor)
+=======
+        Inertial(Ports.PORT2).calibrate()
+        wait(2, SECONDS)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
+        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 67, INCHES)
+        
+        
+        
+>>>>>>> 6b1dae3 (Added auton code)
     
     def user_control(self):
         self.brain.screen.clear_screen()
