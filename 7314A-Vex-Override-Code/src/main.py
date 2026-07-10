@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 #                                                                              #
 # 	Module:       main.py                                                      #
-# 	Author:       ibrahimhelal                                                 #
+# 	Author:       ibrahimhelal, Jackson                                        #
 # 	Created:      4/23/2026, 6:07:40 PM                                        #
 # 	Description:  V5 project                                                   #
 #                                                                              #
