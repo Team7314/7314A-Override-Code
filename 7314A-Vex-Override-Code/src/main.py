@@ -44,6 +44,8 @@ class MecanumDrive:
         DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
         DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
         DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 67, INCHES)
+        Intake(Ports.PORT3, Ports.PORT4).spin(FORWARD, 100, PERCENT)
+
 
     def user_control(self):
         self.brain.screen.clear_screen()
@@ -77,6 +79,16 @@ class MecanumDrive:
         self.drive_base.drive_for(FORWARD, 28, INCHES)
         self.drive_base.turn_for(RIGHT, 90, DEGREES)
         self.drive_base.drive_for(FORWARD, 22, INCHES)
+        while (true)
+        {
+            if (controler.buttonUp.pressing())
+            {
+                while (controler.buttonDown.pressing() == false)
+                {
+                    spin.intake(FORWARD, 100, PERCENT)
+                }
+            }
+        }
         
         
 >>>>>>> 6b1dae3 (Added auton code)
