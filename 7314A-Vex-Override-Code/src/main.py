@@ -81,21 +81,21 @@ class MecanumDrive:
         
 >>>>>>> 6b1dae3 (Added auton code)
     
-    def user_control(self):
-        self.brain.screen.clear_screen()
-        self.brain.screen.print("driver control")
+def user_control(self):
+    self.brain.screen.clear_screen()
+    self.brain.screen.print("driver control")
         # place driver control in this while loop
 
 
-        while True:
-            fwd = self.controller.axis3.position()
-            strafe = self.controller.axis4.position()
-            turn = self.controller.axis1.position()
-            self.drive_base.drive(fwd, strafe, turn)
+    while True:
+        fwd = self.controller.axis3.position()
+        strafe = self.controller.axis4.position()
+        turn = self.controller.axis1.position()
+        self.drive_base.drive(fwd, strafe, turn)
 
-            self.update_display_color()
+        self.update_display_color()
             
-            wait(1, MSEC)
+        wait(1, MSEC)
 
 robot = Robot()
 
