@@ -16,6 +16,9 @@ class MecanumDrive:
     def __init__(self, fl_motor, fr_motor, bl_motor, br_motor):
         self.controller = Controller()
         self.inertial_sensor = Inertial(Ports.PORT15)
+        self.brain = Brain()
+        # self.pin_color_sensor = ColorSensor(Ports.PORT3)  # Color sensor not available in vex module
+        self.drive_base = DriveTrain(fl_motor, fr_motor, bl_motor, br_motor)
 
     def update_display_color(self):
         color = self.pin_color_sensor.color()
@@ -54,43 +57,23 @@ class MecanumDrive:
             fwd = self.controller.axis3.position()
             strafe = self.controller.axis4.position()
             turn = self.controller.axis1.position()
-            self.drive_base.drive(fwd, strafe, turn)
+            self.drive_base.drive(FORWARD, fwd, PERCENT)
 
             self.update_display_color()
             
             wait(1, MSEC)
 
-        # place automonous code here
-<<<<<<< HEAD
->>>>>>> 8a42928 (Added color sensor)
-=======
-        Inertial(Ports.PORT2).calibrate()
-        wait(2, SECONDS)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 24, INCHES)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).turn_for(FORWARD, 0, DEGREES, 90, PERCENT, True)
-        DriveTrain(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20).drive_for(FORWARD, 67, INCHES)
-        
-        
-        
->>>>>>> 6b1dae3 (Added auton code)
+
+class Robot:
+    def __init__(self):
+        self.mecanum_drive = MecanumDrive(Ports.PORT1, Ports.PORT10, Ports.PORT11, Ports.PORT20)
+    
+    def autonomous(self):
+        self.mecanum_drive.autonomous()
     
     def user_control(self):
-        self.brain.screen.clear_screen()
-        self.brain.screen.print("driver control")
-        # place driver control in this while loop
+        self.mecanum_drive.user_control()
 
-
-        while True:
-            fwd = self.controller.axis3.position()
-            strafe = self.controller.axis4.position()
-            turn = self.controller.axis1.position()
-            self.drive_base.drive(fwd, strafe, turn)
-
-            self.update_display_color()
-            
-            wait(1, MSEC)
 
 robot = Robot()
 
@@ -104,4 +87,4 @@ def user_control():
 comp = Competition(user_control, autonomous)
 
 # actions to do when the program starts
-robot.brain.screen.clear_screen()
+robot.mecanum_drive.brain.screen.clear_screen()
