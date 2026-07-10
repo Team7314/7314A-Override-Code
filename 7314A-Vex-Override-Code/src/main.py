@@ -60,6 +60,10 @@ class MecanumDrive:
             
             wait(1, MSEC)
 
+            Controller_1 = Controller()
+
+            Controller_1.pressed(spin)
+
         # place automonous code here
 <<<<<<< HEAD
 >>>>>>> 8a42928 (Added color sensor)
