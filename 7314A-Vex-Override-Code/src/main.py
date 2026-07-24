@@ -15,10 +15,20 @@ class Intake:
         self._left_motor = left_motor
         self._right_motor = right_motor
 
-    def spin(self):
+    def in_take(self):
         # Code to intake
         self._left_motor.spin(FORWARD, 100, PERCENT)
         self._right_motor.spin(REVERSE, 100, PERCENT)
+
+    def out_take(self):
+        # Code to intake
+        self._left_motor.spin(FORWARD, -100, PERCENT)
+        self._right_motor.spin(REVERSE, -100, PERCENT)
+
+    def stop(self):
+        # Code to intake
+        self._left_motor.stop()
+        self._right_motor.stop()
 
 class MecanumDrive:
     def __init__(self, fl, fr, bl, br):
@@ -85,10 +95,12 @@ class Robot:
             self.drive_base.drive(fwd, strafe, turn)
 
             # Check if R1 is pressed
-            move_intake_pressed = self.controller.buttonR1.pressing
-
-            if (move_intake_pressed):
-                self.intake.spin()
+            if (self.controller.buttonR1.pressing()):
+                self.intake.in_take()
+            elif(self.controller.buttonL1.pressing()):
+                self.intake.out_take()
+            else:
+                self.intake.stop()
 
             wait(1, MSEC)
 
