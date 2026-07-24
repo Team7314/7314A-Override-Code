@@ -10,14 +10,6 @@
 # Library imports
 from vex import *
 
-class Intake:
-    def __init__(self, left_motor, right_motor):
-        self._left_motor = left_motor
-        self._right_motor = right_motor
-
-    def spin(self):
-        # Code to intake
-        self._left_motor.spin(FORWARD, 100, PERCENT)
 
 class MecanumDrive:
     def __init__(self, fl, fr, bl, br):
@@ -51,17 +43,11 @@ class Robot:
         self.brain = Brain()
         self.controller = Controller()
         self.inertial = Inertial(Ports.PORT15)
-
-        
         fl = Motor(Ports.PORT1, False)
         fr = Motor(Ports.PORT10, True)
         bl = Motor(Ports.PORT11, False)
         br = Motor(Ports.PORT20, True)
         self.drive_base = MecanumDrive(fl, fr, bl, br)
-
-        l_intake_motor = Motor(Ports.PORT5)
-        r_intake_motor = Motor(Ports.PORT6)
-        self.intake = Intake(l_intake_motor, r_intake_motor)
 
     def autonomous(self):
         self.brain.screen.clear_screen()
@@ -82,26 +68,19 @@ class Robot:
             strafe = self.controller.axis4.position()
             turn = self.controller.axis1.position()
             self.drive_base.drive(fwd, strafe, turn)
-
-            # Check if R1 is pressed
-            move_intake_pressed = self.controller.buttonR1.pressing
-
-            if (move_intake_pressed):
-                self.intake.spin()
-
             wait(1, MSEC)
 
 
-space_ship = Robot()
+robot = Robot()
 
 def autonomous():
-    space_ship.autonomous()
+    robot.autonomous()
 
 def user_control():
-    space_ship.user_control()
+    robot.user_control()
 
 # create competition instance
 comp = Competition(user_control, autonomous)
 
 # actions to do when the program starts
-space_ship.brain.screen.clear_screen()
+robot.brain.screen.clear_screen()
