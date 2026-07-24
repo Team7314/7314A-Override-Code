@@ -18,6 +18,7 @@ class Intake:
     def spin(self):
         # Code to intake
         self._left_motor.spin(FORWARD, 100, PERCENT)
+        self._right_motor.spin(REVERSE, 100, PERCENT)
 
 class MecanumDrive:
     def __init__(self, fl, fr, bl, br):
