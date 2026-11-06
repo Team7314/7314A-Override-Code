@@ -180,7 +180,7 @@ class Robot:
         self.brain.screen.print("autonomous code")
         # self.inertial.calibrate()
         # wait(2, SECONDS)
-        self.drive_base.drive_for(FORWARD, 24, INCHES)
+        self.drive_base.drive_for(FORWARD, 20, INCHES)
         # self.drive_base.turn_for(RIGHT, 90, DEGREES)
         # self.drive_base.drive_for(FORWARD, 24, INCHES)
         # self.drive_base.turn_for(RIGHT, 90, DEGREES)
@@ -218,6 +218,18 @@ class Robot:
             self.swing_arm.backwards()
         else:
             self.swing_arm.stop()
+
+    def show_motor_temperatures(self):
+        # self.brain.screen.clear_screen()
+        self.brain.screen.set_cursor(1, 1)
+        self.brain.screen.print("Motor Temps:")
+        self.brain.screen.set_cursor(2, 1)
+        self.brain.screen.print("FL: " + str(self.drive_base.fl.temperature(TemperatureUnits.CELSIUS)) + "°C | FR: " + str(self.drive_base.fr.temperature(TemperatureUnits.CELSIUS)) + "°C")
+        self.brain.screen.set_cursor(3, 1)
+        self.brain.screen.print("BL: " + str(self.drive_base.bl.temperature(TemperatureUnits.CELSIUS)) + "°C | BR: " + str(self.drive_base.br.temperature(TemperatureUnits.CELSIUS)) + "°C")
+        self.brain.screen.set_cursor(4, 1)
+        self.brain.screen.print("Motors work well below 55°C")
+
 
     # def lift_control(self):
     #     # Lift
@@ -270,6 +282,7 @@ class Robot:
             self.swing_arm_control()
             # self.lift_control()
             # self.intake_control()
+            self.show_motor_temperatures()
 
 rollingrobot = Robot()
 
