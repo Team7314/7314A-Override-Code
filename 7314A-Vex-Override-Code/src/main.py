@@ -1,34 +1,43 @@
 # ---------------------------------------------------------------------------- #
 #                                                                              #
 # 	Module:       main.py                                                      #
-# 	Author:       ibrahimhelal, Jackson, Amir, Bruno                           #
+# 	Author:       ibrahimhelal, Jackson, Reid, Bruno                           #
 # 	Created:      4/23/2026, 6:07:40 PM                                        #
 # 	Description:  V5 project                                                   #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
 # Library imports
-from vex import *
+from vex import * # `type: ignore
 
 class Intake:
-    def __init__(self, left_motor, right_motor):
-        self._left_motor = left_motor
-        self._right_motor = right_motor
+    def __init__(self, half_motor):
+        self.half_motor = half_motor
 
     def in_take(self):
         # Code to intake
-        self._left_motor.spin(FORWARD, 100, PERCENT)
-        self._right_motor.spin(REVERSE, 100, PERCENT)
+        self.half_motor.spin(FORWARD, 100, PERCENT)
 
     def out_take(self):
         # Code to intake
-        self._left_motor.spin(FORWARD, -100, PERCENT)
-        self._right_motor.spin(REVERSE, -100, PERCENT)
+        self.half_motor.spin(REVERSE, 100, PERCENT)
 
-    def stop(self):
+    def release(self):
         # Code to intake
-        self._left_motor.stop()
-        self._right_motor.stop()
+        self.half_motor.stop()
+
+class Conveyer:
+    def __init__(self, conveyer_motor):
+        self.conveyer_motor = conveyer_motor
+
+    def intake(self):
+        self.conveyer_motor.spin(FORWARD, 100, PERCENT)
+
+    def outtake(self):
+        self.conveyer_motor.spin(REVERSE, 100, PERCENT)
+
+    def release(self):
+        self.conveyer_motor.stop
 
 class MecanumDrive:
     def __init__(self, fl, fr, bl, br):
@@ -87,10 +96,10 @@ class Pneumatics:
         self._pneumatics = pneumatics
 
     def open(self):
-        v5pneumatics.open()
+        self._pneumatics.set(True)
 
     def close(self):
-        v5pneumatics.close()
+        self._pneumatics.set(False)
 
 class Lift:
     def __init__(self, liftmotor):
@@ -150,10 +159,10 @@ class Robot:
         # FR 11, FL 12, BR 8, BL 4, CLAW SWING 10, BOTTOM INTAKE 6
         #button list
         #R1 = intake in
-        #L1 = intake out
+        #L1 = swing arm fowards
         #A = claw open
         #B = claw close
-        #R2 = swing arm fowards
+        #R2 = intake out
         #L2 = swing arm backwards
         #up = open pneumatics
         #down = close pneumatics
@@ -161,25 +170,30 @@ class Robot:
         self.brain = Brain()
         self.controller = Controller()
         self.inertial = Inertial(Ports.PORT15)
+        self.pneumatics = Pneumatics(DigitalOut(self.brain.three_wire_port.a))
         fl = Motor(Ports.PORT12, True)
         fr = Motor(Ports.PORT11, False)
         bl = Motor(Ports.PORT4, True)
         br = Motor(Ports.PORT8, False)
         self.drive_base = MecanumDrive(fl, fr, bl, br)
 
-        # intake_motor = Motor(Ports.PORT5, False)
-        # self.intake = Intake(intake_motor)
-
-        self.claw = Claw(Motor(Ports.PORT10, True))
+        intake_motor = Motor(Ports.PORT5, False)
+        self.intake = Intake(intake_motor)
+        self.conveyer_motor = Conveyer(Motor(Ports.PORT6, False))
+        self.claw = Claw(Motor(Ports.PORT2, True))
         self.swing_arm = Swingarm(Motor(Ports.PORT10))
-        # self.lift = Lift(Motor(Ports.PORT20))
+        self.lift = Lift(Motor(Ports.PORT20))
         self.toggle = Toggle(Motor(Ports.PORT9))
+        self.pneumatics = Pneumatics(DigitalOut(self.brain.three_wire_port.a))
 
     def autonomous(self):
         self.brain.screen.clear_screen()
         self.brain.screen.print("autonomous code")
         # self.inertial.calibrate()
         # wait(2, SECONDS)
+        self.toggle.turn_down
+        
+        self.toggle.stop
         self.drive_base.drive_for(FORWARD, 20, INCHES)
         # self.drive_base.turn_for(RIGHT, 90, DEGREES)
         # self.drive_base.drive_for(FORWARD, 24, INCHES)
@@ -212,7 +226,7 @@ class Robot:
 
     def swing_arm_control(self):
         # Swing Arm
-        if (self.controller.buttonR2.pressing()):
+        if (self.controller.buttonL1.pressing()):
             self.swing_arm.fowards()
         elif (self.controller.buttonL2.pressing()):
             self.swing_arm.backwards()
@@ -224,52 +238,55 @@ class Robot:
         self.brain.screen.set_cursor(1, 1)
         self.brain.screen.print("Motor Temps:")
         self.brain.screen.set_cursor(2, 1)
-        self.brain.screen.print("FL: " + str(self.drive_base.fl.temperature(TemperatureUnits.CELSIUS)) + "°C | FR: " + str(self.drive_base.fr.temperature(TemperatureUnits.CELSIUS)) + "°C")
+        self.brain.screen.print("FL: " + str(self.drive_base.fl.temperature(TemperatureUnits.FAHRENHEIT)) + "°F | FR: " + str(self.drive_base.fr.temperature(TemperatureUnits.FAHRENHEIT)) + "°F")
         self.brain.screen.set_cursor(3, 1)
-        self.brain.screen.print("BL: " + str(self.drive_base.bl.temperature(TemperatureUnits.CELSIUS)) + "°C | BR: " + str(self.drive_base.br.temperature(TemperatureUnits.CELSIUS)) + "°C")
+        self.brain.screen.print("BL: " + str(self.drive_base.bl.temperature(TemperatureUnits.FAHRENHEIT)) + "°F | BR: " + str(self.drive_base.br.temperature(TemperatureUnits.FAHRENHEIT)) + "°F")
+        self.brain.screen.set_cursor(6, 1)
+        self.brain.screen.print("Motors work well below 120°F")
         self.brain.screen.set_cursor(4, 1)
-        self.brain.screen.print("Motors work well below 55°C")
+        self.brain.screen.print("bottom intake: " + str(self.conveyer_motor.conveyer_motor.temperature(TemperatureUnits.FAHRENHEIT)) + "°F") 
+        self.brain.screen.set_cursor(5, 1)
+        self.brain.screen.print("top intake: " + str(self.intake.half_motor.temperature(TemperatureUnits.FAHRENHEIT)) + "°F")
 
+    def lift_control(self):
+            # Lift
+        if(self.controller.buttonR2.pressing()):
+            self.lift.up()
+        elif(self.controller.buttonL2.pressing()):
+            self.lift.down()
+        else:
+            self.lift.stop()
 
-    # def lift_control(self):
-    #     # Lift
-    #     if(self.controller.buttonR2.pressing()):
-    #         self.lift.up()
-    #     elif(self.controller.buttonL2.pressing()):
-    #         self.lift.down()
-    #     else:
-    #         self.lift.stop()
-
-    # def intake_control(self):
+    def intake_control(self):
         # Intake
-        # if (self.controller.buttonR1.pressing()):
-        #     self.intake.in_take()
-        # elif(self.controller.buttonL1.pressing()):
-        #     self.intake.out_take()
-        # else:
-        #     self.intake.stop()
+        if (self.controller.buttonR1.pressing()):
+            self.intake.in_take()
+        elif (self.controller.buttonR2.pressing()):
+                    self.intake.out_take()
+        elif (self.controller.buttonUp.pressing):
+            self.intake.release
 
         # Intake Pneumatics
-        # if(self.controller.buttonUp.pressing()):
-        #     open_pneumatics()
-        # if(self.controller.buttonDown.pressing()):
-        #     close_pneumatics()
+    
+        if(self.controller.buttonUp.pressing()):
+             self.pneumatics.open()
+        if(self.controller.buttonDown.pressing()):
+             self.pneumatics.close()
 
         # Lift
-        # if(self.controller.buttonR2.pressing()):
-        #     self.lift.up()
-        # if(self.controller.buttonL2.pressing()):
-        #     self.lift.down()
-        # else:
-        #     self.lift.stop()
-
+        if(self.controller.buttonR2.pressing()):
+            self.lift.up()
+        elif(self.controller.buttonL2.pressing()):
+            self.lift.down()
+        else:
+            self.lift.stop()
+            
         # Bottom Intake
-        # if(self.controller.buttonX.pressing()):
-        #     self.conveyor.up()
-        # if(self.controller.buttonY.pressing()):
-        #     self.conveyor.down()
-        # else:
-        #     self.conveyor.stop()
+        if(self.controller.buttonR1.pressing()):
+            self.conveyer_motor.outtake()
+        elif(self.controller.buttonR2.pressing()):
+            self.conveyer_motor.intake()
+       
 
     def user_control(self):
         self.brain.screen.clear_screen()
@@ -280,8 +297,8 @@ class Robot:
             self.toggle_control()
             self.claw_control()
             self.swing_arm_control()
-            # self.lift_control()
-            # self.intake_control()
+            self.lift_control()
+            self.intake_control()
             self.show_motor_temperatures()
 
 rollingrobot = Robot()
